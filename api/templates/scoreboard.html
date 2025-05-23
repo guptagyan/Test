@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scoreboard Control</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <link rel="stylesheet" href="/static/css/scoreboard.css">
+</head>
+<body>
+    <button class="mobile-menu-btn" id="mobileMenuBtn">
+        <i class="bi bi-list"></i>
+    </button>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 d-md-block bg-dark sidebar">
+                <div class="sidebar-header">
+                    <img src="/static/images/v.png" alt="Company Logo" class="sidebar-logo">
+                    <!-- <h5 class="text-white mb-0">VMS Control Panel</h5> -->
+                </div>
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/">
+                                <i class="bi bi-speedometer2"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/scoreboard">
+                                <i class="bi bi-display"></i> Scoreboard
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="page-header">
+                    <h2>Scoreboard Projection Control</h2>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Live Projection Control</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-center mb-4">
+                            <button id="startBtn" class="btn btn-primary me-3" onclick="startProjection()">
+                                <span id="statusIndicator" class="status-indicator status-inactive"></span>
+                                Start Projection
+                            </button>
+                            
+                            <button id="stopBtn" class="btn btn-danger" onclick="stopProjection()">Stop Projection</button>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">Capture Area</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <label>X:</label>
+                                                <input type="number" id="capture_x" class="form-control" value="15">
+                                            </div>
+                                            <div class="col-6">
+                                                <label>Y:</label>
+                                                <input type="number" id="capture_y" class="form-control" value="180">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <label>Width:</label>
+                                                <input type="number" id="capture_width" class="form-control" value="1354">
+                                            </div>
+                                            <div class="col-6">
+                                                <label>Height:</label>
+                                                <input type="number" id="capture_height" class="form-control" value="455">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">Target Screen Position</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <label>X:</label>
+                                                <input type="number" id="target_x" class="form-control" value="1366">
+                                            </div>
+                                            <div class="col-6">
+                                                <label>Y:</label>
+                                                <input type="number" id="target_y" class="form-control" value="0">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <label>Width:</label>
+                                                <input type="number" id="screen_width" class="form-control" value="1920">
+                                            </div>
+                                            <div class="col-6">
+                                                <label>Height:</label>
+                                                <input type="number" id="screen_height" class="form-control" value="1080">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-3">
+                            <button class="btn btn-success" onclick="updateSettings()">Update Settings</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Available Displays</h5>
+                            </div>
+                            <div class="card-body">
+                                <button class="btn btn-primary mb-3" onclick="fetchDisplays()">Get Displays</button>
+                                <ul id="displays" class="list-group"></ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Running Applications</h5>
+                            </div>
+                            <div class="card-body">
+                                <button class="btn btn-primary mb-3" onclick="fetchRunningApps()">Get Running Apps</button>
+                                <ul id="running_apps" class="list-group"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const socket = io();
+        let isProjectionActive = false;
+
+        socket.on('message', function(data) {
+            console.log("Server:", data);
+            
+            if (data.includes("started")) {
+                isProjectionActive = true;
+                updateStatusIndicator();
+            } else if (data.includes("stopped")) {
+                isProjectionActive = false;
+                updateStatusIndicator();
+            }
+        });
+
+        function updateStatusIndicator() {
+            const indicator = document.getElementById("statusIndicator");
+            indicator.className = isProjectionActive ? 
+                "status-indicator status-active" : 
+                "status-indicator status-inactive";
+        }
+
+        function startProjection() {
+            socket.send(JSON.stringify({ action: "start" }));
+        }
+
+        function stopProjection() {
+            socket.send(JSON.stringify({ action: "stop" }));
+        }
+
+        function updateSettings() {
+            const settings = {
+                capture_x: parseInt(document.getElementById("capture_x").value),
+                capture_y: parseInt(document.getElementById("capture_y").value),
+                capture_width: parseInt(document.getElementById("capture_width").value),
+                capture_height: parseInt(document.getElementById("capture_height").value),
+                target_x: parseInt(document.getElementById("target_x").value),
+                target_y: parseInt(document.getElementById("target_y").value),
+                screen_width: parseInt(document.getElementById("screen_width").value),
+                screen_height: parseInt(document.getElementById("screen_height").value)
+            };
+            socket.send(JSON.stringify({ action: "update", settings: settings }));
+        }
+
+        async function fetchDisplays() {
+            try {
+                const response = await fetch("/displays");
+                const data = await response.json();
+                const displayList = document.getElementById("displays");
+                displayList.innerHTML = "";
+                
+                data.displays.forEach(display => {
+                    const item = document.createElement("li");
+                    item.className = "list-group-item";
+                    item.innerHTML = `
+                        <strong>Display ${display.index}</strong><br>
+                        Position: (${display.x}, ${display.y})<br>
+                        Resolution: ${display.width} × ${display.height}
+                    `;
+                    displayList.appendChild(item);
+                });
+            } catch (error) {
+                console.error("Error fetching displays:", error);
+            }
+        }
+
+        async function fetchRunningApps() {
+            try {
+                const response = await fetch("/running_apps");
+                const data = await response.json();
+                const appList = document.getElementById("running_apps");
+                appList.innerHTML = "";
+                
+                data.apps.forEach(app => {
+                    const item = document.createElement("li");
+                    item.className = "list-group-item";
+                    item.textContent = app;
+                    appList.appendChild(item);
+                });
+            } catch (error) {
+                console.error("Error fetching running apps:", error);
+            }
+        }
+
+        // Initialize status indicator
+        updateStatusIndicator();
+    </script>
+</body>
+</html>

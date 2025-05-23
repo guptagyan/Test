@@ -1,0 +1,495 @@
+/* index.css - Styles for the main dashboard */
+
+:root {
+    --primary-color: #4361ee;
+    --secondary-color: #3f37c9;
+    --accent-color: #4cc9f0;
+    --dark-color: #1a1a2e;
+    --light-color: #f8f9fa;
+    --success-color: #4caf50;
+    --warning-color: #ff9800;
+    --danger-color: #f44336;
+    --sidebar-width: 280px;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f7fa;
+    color: #333;
+    line-height: 1.6;
+    background-image: radial-gradient(circle at 10% 20%, rgba(91, 173, 254, 0.1) 0%, rgba(245, 247, 250, 1) 90%);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Sidebar Styles */
+.sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    width: var(--sidebar-width);
+    padding: 0;
+    box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(180deg, var(--dark-color) 0%, #16213e 100%);
+    transition: all 0.3s ease;
+    overflow-y: auto;
+    border-radius: 5px;
+    margin: 1rem;
+    overflow: hidden;
+}
+
+.sidebar-header {
+    padding: 1.5rem 1.5rem 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+}
+
+.sidebar-logo {
+    max-width: 180px;
+    height: auto;
+    margin-bottom: 1rem;
+
+}
+
+.sidebar .nav-link {
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.7);
+    padding: 0.75rem 1.5rem;
+    margin: 0.15rem 1rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+}
+
+.sidebar .nav-link:hover {
+    color: #fff;
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateX(5px);
+}
+
+.sidebar .nav-link.active {
+    color: #fff;
+    background-color: var(--primary-color);
+    box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
+}
+
+.sidebar .nav-link i {
+    margin-right: 10px;
+    font-size: 1.1rem;
+    width: 24px;
+    text-align: center;
+}
+
+/* Main Content */
+main {
+    margin-left: var(--sidebar-width);
+    padding: 2rem;
+    background-color: #fff;
+    min-height: 100vh;
+    transition: all 0.3s;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.02);
+}
+
+/* Card Styles */
+.card {
+    margin-bottom: 1.5rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
+    border: none;
+    border-radius: 12px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    background-color: #fff;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    font-weight: 600;
+    padding: 1.25rem 1.5rem;
+    border-radius: 12px 12px 0 0 !important;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-body {
+    padding: 1.75rem;
+}
+
+/* Status Cards */
+.status-card {
+    border: none;
+    color: white;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.status-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+.status-card .card-body {
+    position: relative;
+    z-index: 1;
+    padding: 1.5rem;
+}
+
+.status-card .card-title {
+    font-size: 1rem;
+    opacity: 0.9;
+    margin-bottom: 0.5rem;
+}
+
+.status-card .card-text {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 0;
+}
+
+.status-card.primary {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+}
+
+.status-card.info {
+    background: linear-gradient(135deg, #00b4d8 0%, #0096c7 100%);
+}
+
+.status-card.success {
+    background: linear-gradient(135deg, var(--success-color) 0%, #2e7d32 100%);
+}
+
+/* Form Controls */
+.form-control,
+.form-select {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 0.6rem 0.75rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    font-size: 0.95rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.25);
+}
+
+.form-label {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: #555;
+}
+
+.form-text {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+/* Buttons */
+.btn {
+    border-radius: 8px;
+    padding: 0.6rem 1.25rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    font-size: 0.95rem;
+    border: none;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
+}
+
+.btn-success {
+    background-color: var(--success-color);
+}
+
+.btn-danger {
+    background-color: var(--danger-color);
+}
+
+.btn-warning {
+    background-color: var(--warning-color);
+    color: #212529;
+}
+
+/* Tab Navigation */
+.nav-tabs {
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.nav-tabs .nav-link {
+    border: none;
+    color: #495057;
+    font-weight: 500;
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s ease;
+    border-radius: 8px 8px 0 0;
+    margin-right: 0.25rem;
+}
+
+.nav-tabs .nav-link:hover {
+    border: none;
+    color: var(--primary-color);
+    background-color: rgba(67, 97, 238, 0.1);
+}
+
+.nav-tabs .nav-link.active {
+    color: var(--primary-color);
+    background-color: transparent;
+    border-bottom: 3px solid var(--primary-color);
+}
+
+/* Canvas and Preview Area */
+.canvas-container {
+    background-color: #fff;
+    border-radius: 12px;
+    /* padding: 15px; */
+    margin-bottom: 1.5rem;
+    /* box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.7); */
+    /* border: 1px solid #444; */
+}
+
+#previewCanvas {
+    background-color: black;
+    display: block;
+    margin: 0 auto;
+    image-rendering: pixelated;
+    border: 1px solid #555;
+}
+
+.element-properties {
+    background-color: #f8f9fa;
+    /* border-radius: 12px; */
+    padding: 1.75rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+}
+
+/* Brightness Control */
+.brightness-visual {
+    height: 12px;
+    background: linear-gradient(to right, #000, #fff);
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.brightness-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+    transition: width 0.3s ease;
+}
+
+/* Toast Notifications */
+.toast {
+    border-radius: 12px;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    border: none;
+    overflow: hidden;
+}
+
+.toast-header {
+    border-radius: 12px 12px 0 0;
+    padding: 0.75rem 1.25rem;
+    font-weight: 500;
+}
+
+.toast-body {
+    padding: 1.25rem;
+}
+
+/* Page Header */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.page-header h2 {
+    font-weight: 700;
+    color: var(--dark-color);
+    margin: 0;
+}
+
+/* Mobile Menu Toggle */
+.mobile-menu-btn {
+    display: none;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 1050;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Range Input Styling */
+.form-range::-webkit-slider-runnable-track {
+    background: #dee2e6;
+    height: 0.5rem;
+    border-radius: 0.5rem;
+}
+
+.form-range::-moz-range-track {
+    background: #dee2e6;
+    height: 0.5rem;
+    border-radius: 0.5rem;
+}
+
+.form-range::-webkit-slider-thumb {
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-top: -0.4rem;
+    background-color: #4361ee;
+    border: none;
+}
+
+.form-range::-moz-range-thumb {
+    width: 1.25rem;
+    height: 1.25rem;
+    background-color: #4361ee;
+    border: none;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+
+    .sidebar.show {
+        transform: translateX(0);
+    }
+
+    main {
+        margin-left: 0;
+    }
+
+    .mobile-menu-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+        position: relative;
+        height: auto;
+        padding: 0;
+    }
+
+    main {
+        padding: 1.5rem;
+    }
+
+    .card {
+        margin-bottom: 1.25rem;
+    }
+}
+
+#loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+/* Remove rounded corners from display tab cards */
+#display .card,
+#display .card-header,
+#display .card-body,
+#display .element-properties,
+#display canvas,
+#display .form-control,
+#display .form-select {
+    border-radius: 0 !important;
+}
+/* Remove rounded corners globally across the app */
+.card,
+.card-header,
+.card-body,
+.element-properties,
+canvas,
+.form-control,
+.form-select,
+.btn,
+.toast,
+.nav-tabs .nav-link,
+.brightness-visual {
+    border-radius: 0 !important;
+}
+
+/* Sidebar program dropdown styles */
+#programs-dropdown {
+    background-color: rgba(0, 0, 0, 0.1);
+    margin-top: 0.25rem;
+    margin-bottom: 0.5rem;
+    border-radius: 0.25rem;
+}
+
+#programs-dropdown .nav-link {
+    padding: 0.25rem 1rem;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.75);
+}
+
+#programs-dropdown .nav-link:hover {
+    color: white;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+#programs-nav-link .bi-chevron-down {
+    transition: transform 0.2s ease-in-out;
+}
+
+#programs-nav-link[aria-expanded="true"] .bi-chevron-down {
+    transform: rotate(180deg);
+}
+.highlight-program {
+    animation: highlight 1s ease;
+}
+
+@keyframes highlight {
+    0% { background-color: rgba(13, 110, 253, 0.1); }
+    50% { background-color: rgba(13, 110, 253, 0.3); }
+    100% { background-color: transparent; }
+}
