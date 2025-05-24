@@ -72,8 +72,13 @@
                                 <i class="bi bi-image"></i> Screen Preview
                             </a>
                         </li>
-                        
-                        
+                        <li class="nav-item">
+                            <a class="nav-link" href="#schedule-program" data-bs-toggle="tab">
+                                <i class="bi bi-calendar-check"></i> Schedule Program
+                            </a>
+                        </li>
+
+
 
                     </ul>
                 </div>
@@ -117,8 +122,8 @@
                                             <button class="btn btn-info text-white" onclick="checkConnection()">
                                                 <i class="bi bi-arrow-repeat"></i> Refresh Status
                                             </button>
-                                            
-                                             <button class="btn btn-success text-white" onclick="clearScreen()">
+
+                                            <button class="btn btn-success text-white" onclick="clearScreen()">
                                                 <i class="bi bi-eraser"></i> Clear Display
                                             </button>
                                         </div>
@@ -680,7 +685,56 @@
                         </div>
                     </div>
 
-                    
+                    <div class="tab-pane fade" id="schedule-program">
+                        <!-- Schedule form goes here -->
+                        <div class="schedule-form container p-4 border rounded bg-light mt-3">
+                            <h4 class="mb-3">Schedule Program</h4>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="start-date" class="form-label">Start Date</label>
+                                    <input type="date" class="form-control" id="start-date" />
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="stop-date" class="form-label">Stop Date</label>
+                                    <input type="date" class="form-control" id="stop-date" />
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="start-time" class="form-label">Start Time</label>
+                                    <input type="time" class="form-control" id="start-time" />
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="stop-time" class="form-label">Stop Time</label>
+                                    <input type="time" class="form-control" id="stop-time" />
+                                </div>
+                            </div>
+
+                            <div class="form-check mb-3">
+                                <input type="checkbox" class="form-check-input" id="r_repeat" />
+                                <label class="form-check-label" for="r_repeat">Repeat Daily</label>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="media-type" class="form-label">Media Type</label>
+                                <select id="media-type" class="form-select">
+                                    <option value="text">Text</option>
+                                    <option value="image">Image</option>
+                                    <option value="video">Video</option>
+                                </select>
+                            </div>
+
+                            <div id="media-fields" class="mb-3">
+                                <!-- Dynamically add fields here based on media type -->
+                            </div>
+
+                            <button type="button" class="btn btn-primary" onclick="scheduleProgram()">Schedule</button>
+                        </div>
+                    </div>
+
+
 
                 </div>
             </main>
@@ -726,45 +780,97 @@
             document.getElementById('brightness-bar').style.width = '50%';
         });
 
-//  function clearScreen() {
-//     if (!currentConnection || !currentConnection.isConnected) {
-//         showToast('Error', 'Please connect to a controller first', false);
-//         return;
-//     }
+     function scheduleProgram() {
+    if (!currentConnection.isConnected) {
+        showToast('Error', 'Please connect to a controller first', false);
+        return;
+    }
 
-//     const queryParams = new URLSearchParams({
-//         ip: currentConnection.ip,
-//         username: currentConnection.username,
-//         password: currentConnection.password
-//     });
+    // Form data collection
+    const formData = {
+        ip: document.getElementById('image-ip').value,
+        username: document.getElementById('image-username').value,
+        password: document.getElementById('image-password').value,
+        i_x: parseInt(document.getElementById('image-x').value),
+        i_y: parseInt(document.getElementById('image-y').value),
+        i_width: parseInt(document.getElementById('image-width').value),
+        i_height: parseInt(document.getElementById('image-height').value),
+        image_path: document.getElementById('image-path').value,
+        
+        start_date: document.getElementById('start-date').value,
+        stop_date: document.getElementById('stop-date').value,
+        start_time: document.getElementById('start-time').value,
+        stop_time: document.getElementById('stop-time').value,
+        repeat: document.getElementById('r_repeat').checked,
+        media_type: document.getElementById('media-type').value,
+     
+        duration: 10,
+    };
 
-//     fetch(`/led/clear_display?${queryParams}`, {
-//         method: 'POST'
-//     })
-//     .then(response => {
-//         if (!response.ok) {
-//             return response.json().then(err => {
-//                 throw new Error(err.output || 'Failed to clear display');
-//             });
-//         }
-//         return response.json();
-//     })
-//     .then(data => {
-//         if (data.status === 'success') {
-//             showToast('Success', data.output || 'Display cleared successfully.');
-//         } else {
-//             showToast('Clear Failed', data.output || 'Failed to clear display.', false);
-//         }
-//     })
-//     .catch(error => {
-//         showToast('Error', 'Exception: ' + error.message, false);
-//     });
-// }
+    const errors = [];
 
+    // Validate required string fields
+    const requiredFields = [
+        { key: 'ip', label: 'IP' },
+        { key: 'username', label: 'Username' },
+        { key: 'password', label: 'Password' },
+        { key: 'start_date', label: 'Start date' },
+        { key: 'stop_date', label: 'Stop date' },
+        { key: 'start_time', label: 'Start time' },
+        { key: 'stop_time', label: 'Stop time' },
+        { key: 'media_type', label: 'Media type' },
+        { key: 'image_path', label: 'image_path' }
+    ];
+
+    requiredFields.forEach(field => {
+        if (!formData[field.key]) {
+            errors.push(`${field.label} is required`);
+        }
+    });
+
+    // Validate numeric fields
+    ['i_x', 'i_y', 'i_width', 'i_height', 'duration'].forEach(key => {
+        if (isNaN(formData[key])) {
+            errors.push(`${key.charAt(0).toUpperCase() + key.slice(1)} must be a number`);
+        }
+    });
+
+    if (errors.length > 0) {
+        showToast('Validation Error', errors.join('<br>'), false);
+        return;
+    }
+
+    // Send POST request to backend
+    fetch('/led/schedule_program', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(errData => {
+                throw new Error(errData.output || 'Failed to schedule program');
+            });
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.status === 'success') {
+            showToast('Success', data.output);
+        } else {
+            showToast('Scheduling Failed', data.output || 'Failed to schedule program', false);
+        }
+    })
+    .catch(error => {
+        showToast('Error', error.message, false);
+    });
+}
 
     </script>
     <script src="/static/js/script.js"></script>
-    
+
 </body>
 
 </html>

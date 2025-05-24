@@ -183,6 +183,7 @@ function updateConnectionInfo(ip, username, password) {
 
 
 
+
 // Enhanced displayImage with validation
 function displayImage() {
     if (!currentConnection.isConnected) {

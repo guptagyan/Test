@@ -337,7 +337,69 @@ async def upload_video(video: UploadFile = File(...)):
         "full_path": full_path
     }
 
+@fastapi_app.post("/led/schedule_program")
+async def schedule_program(data: dict):
+    """
+    Endpoint to schedule a program on the LED controller.
+    Expects JSON data with IP, username, password, start/stop dates & times, repeat flag, media type, etc.
+    """
+    try:
+        # Required fields from JS
+        required_fields = [
+            "ip", "username", "password",
+            "start_date", "stop_date",
+            "start_time", "stop_time",
+            "media_type", "i_x", "i_y", "i_width", "i_height", "duration", "image_path"
+        ]
 
+        # Validate required fields
+        for field in required_fields:
+            if field not in data:
+                return JSONResponse(
+                    status_code=400,
+                    content={"status": "error", "output": f"Missing required field: {field}"}
+                )
+
+        # Extract and convert parameters
+        ip = str(data["ip"])
+        username = str(data["username"])
+        password = str(data["password"])
+        start_date = str(data["start_date"])
+        stop_date = str(data["stop_date"])
+        start_time = str(data["start_time"])
+        stop_time = str(data["stop_time"])
+        repeat = str(data.get("r_repeat", False))
+        media_type = str(data["media_type"])
+        i_x = str(data["i_x"])  # X Position
+        i_y = str(data["i_y"])  # Y Position
+        i_width = str(data["i_width"])  # Image Width
+        i_height = str(data["i_height"])  # Image Height
+        duration = str(data["duration"])
+        image_path = str(data["image_path"])
+
+        # Construct command arguments
+        args = [
+            ip, username, password,
+            "schedule_program",
+            start_date, stop_date,
+            start_time, stop_time,
+            repeat,
+            media_type,
+            i_x, i_y, i_width, i_height,
+            duration,
+            image_path
+        ]
+
+        # Replace with actual backend command
+        result = execute_command(args)
+
+        return {"status": "success", "output": result}
+
+    except Exception as e:
+        return JSONResponse(
+            status_code=500,
+            content={"status": "error", "output": f"Failed to schedule program: {str(e)}"}
+        )
 @fastapi_app.post("/led/display_image")
 def display_image(data: dict):
     """
